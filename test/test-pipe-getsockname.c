@@ -87,6 +87,9 @@ static void pipe_server_connection_cb(uv_stream_t* handle, int status) {
 
 
 TEST_IMPL(pipe_getsockname) {
+#if defined(NO_SELF_CONNECT)
+  RETURN_SKIP(NO_SELF_CONNECT);
+#endif
   uv_loop_t* loop;
   char buf[1024];
   size_t len;
@@ -168,7 +171,7 @@ TEST_IMPL(pipe_getsockname_abstract) {
   socklen_t sun_len;
   char abstract_pipe[] = "\0test-pipe";
 
-  sock = socket(AF_LOCAL, SOCK_STREAM, 0);
+  sock = socket(AF_UNIX, SOCK_STREAM, 0);
   ASSERT(sock != -1);
 
   sun_len = sizeof sun;
